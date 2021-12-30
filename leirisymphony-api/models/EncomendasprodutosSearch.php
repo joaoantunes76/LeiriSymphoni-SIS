@@ -4,21 +4,24 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Categorias;
+use common\models\Encomendasprodutos;
 
 /**
- * CategoriasSearch represents the model behind the search form of `common\models\Categorias`.
+ * EncomendasprodutosSearch represents the model behind the search form of `common\models\Encomendasprodutos`.
  */
-class CategoriasSearch extends Categorias
+class EncomendasprodutosSearch extends Encomendasprodutos
 {
+
+    public $idproduto0;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['nome'], 'safe'],
+            [['idencomenda', 'idproduto', 'quantidade'], 'integer'],
+            ['idproduto0', 'safe']
         ];
     }
 
@@ -40,13 +43,18 @@ class CategoriasSearch extends Categorias
      */
     public function search($params)
     {
-        $query = Categorias::find();
+        $query = Encomendasprodutos::find();
 
-        // add conditions that should always apply here
+        $query->joinWith(['idproduto0']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['idproduto0'] = [
+            'asc' => ['produtos.nome' => SORT_ASC],
+            'desc' => ['produtos.nome' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -57,11 +65,8 @@ class CategoriasSearch extends Categorias
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-        ]);
-
-        $query->andFilterWhere(['like', 'nome', $this->nome]);
+        $query->andFilterWhere(['idencomenda' => $this->idencomenda, 'idproduto' => $this->idproduto, 'quantidade' => $this->quantidade,])
+            ->andFilterWhere(['like', 'produtos.nome', $this->idproduto0]);;
 
         return $dataProvider;
     }

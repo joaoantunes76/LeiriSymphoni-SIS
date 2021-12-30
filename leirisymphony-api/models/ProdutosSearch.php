@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -11,6 +11,10 @@ use common\models\Produtos;
  */
 class ProdutosSearch extends Produtos
 {
+
+    public $idsubcategoria0;
+    public $idmarca0;
+
     /**
      * {@inheritdoc}
      */
@@ -18,7 +22,7 @@ class ProdutosSearch extends Produtos
     {
         return [
             [['id', 'idsubcategoria', 'idmarca', 'usado', 'stock'], 'integer'],
-            [['nome', 'descricao'], 'safe'],
+            [['nome', 'descricao', 'idsubcategoria0', 'idmarca0'], 'safe'],
             [['preco'], 'number'],
         ];
     }
@@ -43,11 +47,21 @@ class ProdutosSearch extends Produtos
     {
         $query = Produtos::find();
 
-        // add conditions that should always apply here
+        $query->joinWith(['idsubcategoria0', 'idmarca0']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['idsubcategoria0'] = [
+            'asc' => ['subcategorias.nome' => SORT_ASC],
+            'desc' => ['subcategorias.nome' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['idmarca0'] = [
+            'asc' => ['marcas.nome' => SORT_ASC],
+            'desc' => ['marcas.nome' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -68,7 +82,9 @@ class ProdutosSearch extends Produtos
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'descricao', $this->descricao]);
+            ->andFilterWhere(['like', 'descricao', $this->descricao])
+            ->andFilterWhere(['like', 'subcategorias.nome', $this->idsubcategoria0])
+            ->andFilterWhere(['like', 'marcas.nome', $this->idmarca0]);
 
         return $dataProvider;
     }

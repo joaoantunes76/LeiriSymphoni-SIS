@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -11,6 +11,9 @@ use common\models\Encomendas;
  */
 class EncomendasSearch extends Encomendas
 {
+
+    public $idperfil0;
+
     /**
      * {@inheritdoc}
      */
@@ -18,8 +21,9 @@ class EncomendasSearch extends Encomendas
     {
         return [
             [['id', 'idperfil', 'pago'], 'integer'],
-            [['estado', 'tipoexpedicao'], 'safe'],
+            [['estado', 'tipoexpedicao', 'idperfil0'], 'safe'],
             [['preco'], 'number'],
+            [['data'], 'date'],
         ];
     }
 
@@ -43,11 +47,16 @@ class EncomendasSearch extends Encomendas
     {
         $query = Encomendas::find();
 
-        // add conditions that should always apply here
+        $query->joinWith(['idperfil0']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['idperfil0'] = [
+            'asc' => ['perfis.nome' => SORT_ASC],
+            'desc' => ['perfis.nome' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -66,7 +75,8 @@ class EncomendasSearch extends Encomendas
         ]);
 
         $query->andFilterWhere(['like', 'estado', $this->estado])
-            ->andFilterWhere(['like', 'tipoexpedicao', $this->tipoexpedicao]);
+            ->andFilterWhere(['like', 'tipoexpedicao', $this->tipoexpedicao])
+            ->andFilterWhere(['like', 'perfis.nome', $this->idperfil0]);
 
         return $dataProvider;
     }

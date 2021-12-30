@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Categorias;
+use common\models\Artistas;
 
 /**
- * CategoriasSearch represents the model behind the search form of `common\models\Categorias`.
+ * ArtistasSearch represents the model behind the search form of `common\models\Artistas`.
  */
-class CategoriasSearch extends Categorias
+class ArtistasSearch extends Artistas
 {
     /**
      * {@inheritdoc}
@@ -40,7 +40,7 @@ class CategoriasSearch extends Categorias
      */
     public function search($params)
     {
-        $query = Categorias::find();
+        $query = Artistas::find();
 
         // add conditions that should always apply here
 

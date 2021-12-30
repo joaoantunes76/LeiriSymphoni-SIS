@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Categorias;
+use common\models\Musicas;
 
 /**
- * CategoriasSearch represents the model behind the search form of `common\models\Categorias`.
+ * MusicasSearch represents the model behind the search form of `common\models\Musicas`.
  */
-class CategoriasSearch extends Categorias
+class MusicasSearch extends Musicas
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class CategoriasSearch extends Categorias
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['nome'], 'safe'],
+            [['id', 'idalbuns'], 'integer'],
+            [['nome', 'ficheiro'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class CategoriasSearch extends Categorias
      */
     public function search($params)
     {
-        $query = Categorias::find();
+        $query = Musicas::find();
 
         // add conditions that should always apply here
 
@@ -59,9 +59,11 @@ class CategoriasSearch extends Categorias
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'idalbuns' => $this->idalbuns,
         ]);
 
-        $query->andFilterWhere(['like', 'nome', $this->nome]);
+        $query->andFilterWhere(['like', 'nome', $this->nome])
+            ->andFilterWhere(['like', 'ficheiro', $this->ficheiro]);
 
         return $dataProvider;
     }

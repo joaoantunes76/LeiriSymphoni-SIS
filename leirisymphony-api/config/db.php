@@ -3,8 +3,8 @@
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=leirisymphony',
-    'username' => 'root',
-    'password' => '',
+    'username' => 'johnnypaps',
+    'password' => 'joao7766',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
