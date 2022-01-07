@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -11,6 +11,8 @@ use common\models\Subcategorias;
  */
 class SubcategoriasSearch extends Subcategorias
 {
+    public $idcategoria0;
+
     /**
      * {@inheritdoc}
      */
@@ -18,7 +20,7 @@ class SubcategoriasSearch extends Subcategorias
     {
         return [
             [['id', 'idcategoria'], 'integer'],
-            [['nome'], 'safe'],
+            [['nome', 'idcategoria0'], 'safe'],
         ];
     }
 
@@ -42,11 +44,16 @@ class SubcategoriasSearch extends Subcategorias
     {
         $query = Subcategorias::find();
 
-        // add conditions that should always apply here
+        $query->joinWith(['idcategoria0']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['idcategoria0'] = [
+            'asc' => ['categorias.nome' => SORT_ASC],
+            'desc' => ['categorias.nome' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -62,7 +69,8 @@ class SubcategoriasSearch extends Subcategorias
             'idcategoria' => $this->idcategoria,
         ]);
 
-        $query->andFilterWhere(['like', 'nome', $this->nome]);
+        $query->andFilterWhere(['like', 'nome', $this->nome])
+        ->andFilterWhere(['like', 'categorias.nome', $this->idcategoria0]);
 
         return $dataProvider;
     }

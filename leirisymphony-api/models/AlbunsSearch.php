@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Categorias;
+use common\models\Albuns;
 
 /**
- * CategoriasSearch represents the model behind the search form of `common\models\Categorias`.
+ * AlbunsSearch represents the model behind the search form of `common\models\Albuns`.
  */
-class CategoriasSearch extends Categorias
+class AlbunsSearch extends Albuns
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,9 @@ class CategoriasSearch extends Categorias
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['nome'], 'safe'],
+            [['id', 'idimagem'], 'integer'],
+            [['nome', 'datalancamento'], 'safe'],
+            [['preco'], 'number'],
         ];
     }
 
@@ -40,7 +41,7 @@ class CategoriasSearch extends Categorias
      */
     public function search($params)
     {
-        $query = Categorias::find();
+        $query = Albuns::find();
 
         // add conditions that should always apply here
 
@@ -59,6 +60,9 @@ class CategoriasSearch extends Categorias
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'preco' => $this->preco,
+            'datalancamento' => $this->datalancamento,
+            'idimagem' => $this->idimagem,
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome]);

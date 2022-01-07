@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace app\models;
 
 use Yii;
 
@@ -13,6 +13,7 @@ use Yii;
  * @property int $pago
  * @property float $preco
  * @property string $tipoexpedicao
+ * @property string $data
  *
  * @property Encomendasprodutos[] $encomendasprodutos
  * @property Perfis $idperfil0
@@ -38,6 +39,7 @@ class Encomendas extends \yii\db\ActiveRecord
             [['idperfil', 'pago'], 'integer'],
             [['estado', 'tipoexpedicao'], 'string'],
             [['preco'], 'number'],
+            [['data'], 'date'],
             [['idperfil'], 'exist', 'skipOnError' => true, 'targetClass' => Perfis::className(), 'targetAttribute' => ['idperfil' => 'id']],
         ];
     }
@@ -54,6 +56,7 @@ class Encomendas extends \yii\db\ActiveRecord
             'pago' => 'Pago',
             'preco' => 'Preco',
             'tipoexpedicao' => 'Tipoexpedicao',
+            'data' => 'Data',
         ];
     }
 
