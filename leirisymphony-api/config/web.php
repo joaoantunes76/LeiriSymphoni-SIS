@@ -52,7 +52,9 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 [
-                    'class' => 'yii\rest\UrlRule', 'controller' => 'produtos',
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['produtos', 'eventos', 'albuns'],
+                    'pluralize' => false,
                 ],
             ],
         ],
