@@ -79,9 +79,9 @@ class Eventos extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        $prod_id = $this->id;
+        $event_id = $this->id;
         $myObj = new \stdClass();
-        $myObj->id = $prod_id;
+        $myObj->id = $event_id;
         $myObj->lotacao = $this->lotacao;
         $myObj->descricao = $this->descricao;
         $myObj->data = $this->data;
