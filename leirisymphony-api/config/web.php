@@ -53,7 +53,7 @@ $config = [
             'rules' => [
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => ['produtos', 'eventos', 'albuns'],
+                    'controller' => ['produtos', 'eventos', 'albuns','encomendas'],
                     'pluralize' => false,
                 ],
             ],
