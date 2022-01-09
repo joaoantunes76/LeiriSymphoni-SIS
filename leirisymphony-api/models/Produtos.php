@@ -201,7 +201,7 @@ class Produtos extends \yii\db\ActiveRecord
         $myObj->preco = $this->preco;
         $myJSON = json_encode($myObj->preco);
         if (!$insert && isset($changedAttributes['preco']) && $changedAttributes['preco'] > $this->preco) {
-            $this->FazPublish("Produto".$produtoId, "O preco do produto baixou para:".$myJSON);
+            $this->FazPublish("Produto".$produtoId, "O preco do produto com id:".$produtoId." baixou para:".$myJSON."€");
         }
     }
 
