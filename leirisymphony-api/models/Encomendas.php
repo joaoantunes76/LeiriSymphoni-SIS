@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Bluerhinos\phpMQTT;
 use Yii;
 
 /**
@@ -88,6 +89,33 @@ class Encomendas extends \yii\db\ActiveRecord
     public function getIdprodutos()
     {
         return $this->hasMany(Produtos::className(), ['id' => 'idproduto'])->viaTable('encomendasprodutos', ['idencomenda' => 'id']);
+    }
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $id = $this->id;
+        $myObj = new \stdClass();
+        $myObj->estado = $this-> estado;
+        $myJSON = json_encode($myObj->estado);
+        if (!$insert && isset($changedAttributes['estado'])) {
+            $this->FazPublish("encomenda".$id, "o estado mudou para:".$myJSON);
+        }
+    }
+    public function FazPublish($canal,$msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $username = ""; // set your username
+        $password = ""; // set your password
+        $client_id = "phpMQTT-publisher"; // unique!
+        $mqtt = new phpMQTT($server, $port, $client_id);
+        if ($mqtt->connect(true, NULL, $username, $password)) {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        } else {
+            file_put_contents("debug.output", "Time out!");
+        }
     }
 
 }
