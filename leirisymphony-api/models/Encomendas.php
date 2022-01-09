@@ -89,4 +89,5 @@ class Encomendas extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Produtos::className(), ['id' => 'idproduto'])->viaTable('encomendasprodutos', ['idencomenda' => 'id']);
     }
+
 }

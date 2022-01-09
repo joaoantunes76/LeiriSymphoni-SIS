@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\Categorias;
 use app\models\Produtos;
+use app\models\Subcategorias;
 use yii\rest\ActiveController;
 
 class ProdutosController extends ActiveController
@@ -15,10 +17,22 @@ class ProdutosController extends ActiveController
         return $produtos;
     }
 
+    public function actionPorCategoria($categoriaid){
+        $subcategorias = Subcategorias::find()->select('id')->where(['idcategoria' => $categoriaid])->all();
+        $produtos = Produtos::find()->innerJoinWith('idsubcategoria0')->where(['idcategoria' => $categoriaid])->all();
+
+        return $produtos;
+    }
+
     public function actionFiltroPrecoMaisBaixo(){
         $produtos = Produtos::find()->orderBy(['preco' => SORT_ASC])->all();
 
         return $produtos;
     }
 
+    public function actionFiltroPrecoMaisAlto(){
+        $produtos = Produtos::find()->orderBy(['preco' => SORT_DESC])->all();
+
+        return $produtos;
+    }
 }
