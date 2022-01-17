@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Categorias;
+use app\models\Imagens;
 use app\models\Produtos;
 use app\models\Subcategorias;
 use yii\rest\ActiveController;
@@ -34,5 +35,25 @@ class ProdutosController extends ActiveController
         $produtos = Produtos::find()->orderBy(['preco' => SORT_DESC])->all();
 
         return $produtos;
+    }
+
+    public function actionProdutosComImagem(){
+        $produtos = Produtos::find()->all();
+        $produtosComImagem = array();
+        foreach($produtos as $produto){
+            $myObj = new \stdClass();
+            $imagens = Imagens::find()->where(['idproduto' => $produto->id])->all();
+            $myObj->id = $produto->id;
+            $myObj->idsubcategoria = $produto->idsubcategoria;
+            $myObj->idmarca = $produto->idmarca;
+            $myObj->nome = $produto->nome;
+            $myObj->descricao = $produto->descricao;
+            $myObj->usado = $produto->usado;
+            $myObj->preco = $produto->preco;
+            $myObj->imagemPrincipal = base64_encode(file_get_contents(\Yii::getAlias('@imageurl').'/'.$imagens[0]->nome));
+            array_push($produtosComImagem, $myObj);
+        }
+
+        return $produtosComImagem;
     }
 }
