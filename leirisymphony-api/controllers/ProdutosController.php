@@ -50,6 +50,7 @@ class ProdutosController extends ActiveController
             $myObj->descricao = $produto->descricao;
             $myObj->usado = $produto->usado;
             $myObj->preco = $produto->preco;
+            $myObj->stock = $produto->stock;
             $myObj->imagemPrincipal = base64_encode(file_get_contents(\Yii::getAlias('@imageurl').'/'.$imagens[0]->nome));
             array_push($produtosComImagem, $myObj);
         }
