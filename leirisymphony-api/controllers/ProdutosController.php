@@ -6,11 +6,27 @@ use app\models\Categorias;
 use app\models\Imagens;
 use app\models\Produtos;
 use app\models\Subcategorias;
+use yii\filters\auth\CompositeAuth;
+use yii\filters\auth\HttpBasicAuth;
+use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\rest\ActiveController;
 
 class ProdutosController extends ActiveController
 {
     public $modelClass = 'app\models\Produtos';
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator']['only'] = ['create', 'delete'];
+        $behaviors['authenticator']["authMethods"] = [
+            HttpBasicAuth::class,
+            HttpBearerAuth::class,
+            QueryParamAuth::class,
+        ];
+        return $behaviors;
+    }
 
     public function actionRecentes(){
         $produtos = Produtos::find()->orderBy(['id' => SORT_DESC])->limit(4)->all();
