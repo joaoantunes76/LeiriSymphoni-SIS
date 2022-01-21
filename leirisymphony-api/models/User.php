@@ -21,7 +21,7 @@ use yii\web\IdentityInterface;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $acess_token
+ * @property string $access_token
  * @property string $password write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -73,7 +73,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['acess_token' => $token]);
+        return static::findOne(['access_token' => $token]);
     }
 
     /**
