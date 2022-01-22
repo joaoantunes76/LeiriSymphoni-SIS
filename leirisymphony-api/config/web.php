@@ -54,7 +54,7 @@ $config = [
                 [
                     'class' => 'yii\rest\UrlRule',
 
-                    'controller' => ['marcas', 'categorias', 'subcategorias', 'produtos', 'encomendas', 'eventos', 'albuns', 'users'],
+                    'controller' => ['marcas', 'categorias', 'subcategorias', 'produtos', 'encomendas', 'eventos', 'albuns', 'users', 'carrinho'],
 
                     'pluralize' => false,
                 ],
