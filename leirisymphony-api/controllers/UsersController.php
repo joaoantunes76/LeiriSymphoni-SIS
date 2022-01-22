@@ -34,12 +34,13 @@ class UsersController extends ActiveController
         $myObj = new \stdClass();
         if ($model->login()) {
             $user = User::findByUsername($model->username);
-            if($user->acess_token == null){
+            if($user->access_token == null){
                 $key = Yii::$app->getSecurity()->generateRandomString().$model->username;
-                $user->acess_token = $key;
+                $user->access_token = $key;
                 $user->save();
             }
-            $myObj->token = $user->acess_token;
+            $myObj->token = $user->access_token;
+
         }
         else {
             $myObj->error = "Error, username or password may be wrong!";
