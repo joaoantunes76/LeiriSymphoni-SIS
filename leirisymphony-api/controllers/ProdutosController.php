@@ -19,7 +19,7 @@ class ProdutosController extends ActiveController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['authenticator']['only'] = ['create', 'delete'];
+        $behaviors['authenticator']['only'] = ['create','update','delete'];
         $behaviors['authenticator']["authMethods"] = [
             HttpBasicAuth::class,
             HttpBearerAuth::class,
