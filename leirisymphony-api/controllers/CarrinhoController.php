@@ -105,13 +105,15 @@ class CarrinhoController extends ActiveController
     public function actionDeleteCarrinhoByToken($idproduto) {
         $token = substr(Yii::$app->request->headers["authorization"], 7);
         $user = User::findIdentityByAccessToken($token);
+        $myObj = new \stdClass();
         $perfil = Perfis::find()->where(['iduser' => $user->id])->one();
         if (Carrinho::find()->where(["idproduto" => $idproduto, "idperfil" => $perfil->id])->exists()) {
             Carrinho::find()->where(["idproduto" => $idproduto, "idperfil" => $perfil->id])->one()->delete();
-            return true;
+            $myObj->status = true;
         }
         else{
-            return false;
+            $myObj->status = false;
         }
+        return $myObj;
     }
 }
