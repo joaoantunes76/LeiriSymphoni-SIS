@@ -73,31 +73,38 @@ class CarrinhoController extends ActiveController
 
     public function actionEditCarrinhoByToken($idproduto) {
         $token = substr(Yii::$app->request->headers["authorization"], 7);
-        $user = User::findIdentityByAccessToken($token);
-        $perfil = Perfis::find()->where(['iduser' => $user->id])->one();
+        if(User::findIdentityByAccessToken($token)) {
+            $user = User::findIdentityByAccessToken($token);
+            $perfil = Perfis::find()->where(['iduser' => $user->id])->one();
 
-        if($this->request->post("quantidade") != null) {
-            $quantidade = $this->request->post("quantidade");
-            if (Carrinho::find()->where(["idproduto" => $idproduto, "idperfil" => $perfil->id])->exists()) {
-                $carrinho = Carrinho::find()->where(["idproduto" => $idproduto, "idperfil" => $perfil->id])->one();
-                $carrinho->quantidade = $quantidade;
-                if ($carrinho->validate() && $carrinho->save()) {
-                    return $carrinho;
+            if ($this->request->post("quantidade") != null) {
+                $quantidade = $this->request->post("quantidade");
+                if (Carrinho::find()->where(["idproduto" => $idproduto, "idperfil" => $perfil->id])->exists()) {
+                    $carrinho = Carrinho::find()->where(["idproduto" => $idproduto, "idperfil" => $perfil->id])->one();
+                    $carrinho->quantidade = $quantidade;
+                    if ($carrinho->validate() && $carrinho->save()) {
+                        return $carrinho;
+                    } else {
+                        $myObj = new \stdClass();
+                        $myObj->error = $carrinho->firstErrors;
+                        return $myObj;
+                    }
+
                 } else {
                     $myObj = new \stdClass();
-                    $myObj->error = $carrinho->firstErrors;
+                    $myObj->error = "Error, Produto does not exist";
+                    $myObj->token = Yii::$app->request->headers["authorization"];
                     return $myObj;
                 }
-
             } else {
                 $myObj = new \stdClass();
-                $myObj->error = "Error, Produto does not exist";
+                $myObj->error = "quantidade is missing";
                 return $myObj;
             }
         }
         else{
             $myObj = new \stdClass();
-            $myObj->error = "quantidade is missing";
+            $myObj->error = "Cant find user with token";
             return $myObj;
         }
     }

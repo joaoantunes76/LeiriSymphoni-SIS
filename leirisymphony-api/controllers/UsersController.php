@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\LoginForm;
+use app\models\SignupForm;
 use app\models\User;
 use Yii;
 use yii\filters\auth\CompositeAuth;
@@ -47,6 +48,30 @@ class UsersController extends ActiveController
             $myObj->token = null;
         }
         return $myObj;
+    }
+
+    public function actionRegister(){
+        $model = new SignupForm();
+
+        $model->username = $this->request->post("username");
+        $model->email = $this->request->post("email");
+        $model->password = $this->request->post("password");
+        $myObj = new \stdClass();
+        if($model->validate()){
+            $user = $model->signup();
+            if($user->access_token == null){
+                $key = Yii::$app->getSecurity()->generateRandomString().$model->username;
+                $user->access_token = $key;
+                $user->save();
+            }
+            $myObj->token = $user->access_token;
+        }
+        else{
+            $myObj->error = $model->errors;
+            $myObj->token = null;
+        }
+        return $myObj;
+
     }
 
 }
