@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\LoginForm;
+use app\models\Perfis;
 use app\models\SignupForm;
 use app\models\User;
 use Yii;
@@ -71,7 +72,49 @@ class UsersController extends ActiveController
             $myObj->token = null;
         }
         return $myObj;
+    }
 
+    public function actionPerfil(){
+        $token = substr(Yii::$app->request->headers["authorization"], 7);
+        if(User::findIdentityByAccessToken($token)) {
+            $user = User::findIdentityByAccessToken($token);
+            $perfil = Perfis::find()->where(['iduser' => $user->id])->one();
+            return $perfil;
+        }
+        else{
+            $myObj = new \stdClass();
+            $myObj->error = "Nenhum utilizador encontrado com o token inserido";
+            return $myObj;
+        }
+    }
+
+    public function actionEditarPerfil(){
+        $token = substr(Yii::$app->request->headers["authorization"], 7);
+        if(User::findIdentityByAccessToken($token)) {
+            $user = User::findIdentityByAccessToken($token);
+            $perfil = Perfis::find()->where(['iduser' => $user->id])->one();
+
+            $perfil->nome = $this->request->post("nome");
+            $perfil->nif = $this->request->post("nif");
+            $perfil->endereco = $this->request->post("endereco");
+            $perfil->cidade = $this->request->post("cidade");
+            $perfil->codigopostal = $this->request->post("codigopostal");
+            $perfil->telefone = $this->request->post("telefone");
+
+            if($perfil->validate() && $perfil->save()) {
+                return $perfil;
+            }
+            else{
+                $myObj = new \stdClass();
+                $myObj->error = $perfil->errors;
+                return $myObj;
+            }
+        }
+        else{
+            $myObj = new \stdClass();
+            $myObj->error = "Nenhum utilizador encontrado com o token inserido";
+            return $myObj;
+        }
     }
 
 }
