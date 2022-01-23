@@ -79,7 +79,17 @@ class UsersController extends ActiveController
         if(User::findIdentityByAccessToken($token)) {
             $user = User::findIdentityByAccessToken($token);
             $perfil = Perfis::find()->where(['iduser' => $user->id])->one();
-            return $perfil;
+
+            $myObj = new \stdClass();
+            $myObj->email = $user->email;
+            $myObj->nome = $perfil->nome;
+            $myObj->nif = $perfil->nif;
+            $myObj->endereco = $perfil->nif;
+            $myObj->cidade = $perfil->nif;
+            $myObj->codigopostal = $perfil->nif;
+            $myObj->telefone = $perfil->nif;
+
+            return $myObj;
         }
         else{
             $myObj = new \stdClass();
@@ -102,7 +112,16 @@ class UsersController extends ActiveController
             $perfil->telefone = $this->request->post("telefone");
 
             if($perfil->validate() && $perfil->save()) {
-                return $perfil;
+                $myObj = new \stdClass();
+                $myObj->email = $user->email;
+                $myObj->nome = $perfil->nome;
+                $myObj->nif = $perfil->nif;
+                $myObj->endereco = $perfil->nif;
+                $myObj->cidade = $perfil->nif;
+                $myObj->codigopostal = $perfil->nif;
+                $myObj->telefone = $perfil->nif;
+
+                return $myObj;
             }
             else{
                 $myObj = new \stdClass();
