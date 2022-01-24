@@ -53,6 +53,46 @@ class EncomendasController extends ActiveController
         return $Encomenda;
     }
 
+    public function actionEncomendasPorToken(){
+        $token = substr(Yii::$app->request->headers["authorization"], 7);
+        if(User::findIdentityByAccessToken($token)) {
+            $user = User::findIdentityByAccessToken($token);
+            $perfil = Perfis::find()->where(['iduser' => $user->id])->one();
+            $encomendas = Encomendas::find()->where(['idperfil' => $perfil->id])->all();
+
+            $objArray = [];
+            foreach ($encomendas as $encomenda){
+                $myObj = new \stdClass();
+                $myObj->id = $encomenda->id;
+                $myObj->idperfil = $encomenda->idperfil;
+                $myObj->estado = $encomenda->estado;
+                $myObj->pago = $encomenda->pago;
+                $myObj->preco = $encomenda->preco;
+                $myObj->tipoexpedicao = $encomenda->tipoexpedicao;
+                $myObj->data = $encomenda->data;
+                $encomendasProdutos = Encomendasprodutos::find()->where(["idencomenda" => $encomenda->id])->all();
+                $produtosArray = [];
+                foreach ($encomendasProdutos as $encomendasProduto){
+                    $produto = Produtos::find()->where(["id" => $encomendasProduto->idproduto])->one();
+                    $encomendaProdutoObj = new \stdClass();
+                    $encomendaProdutoObj->produto = $produto;
+                    $encomendaProdutoObj->quantidade = $encomendasProduto->quantidade;
+                    array_push($produtosArray, $encomendaProdutoObj);
+
+                }
+                $myObj->encomendasProdutos = $produtosArray;
+                array_push($objArray, $myObj);
+            }
+
+            return $objArray;
+        }
+        else{
+            $myObj = new \stdClass();
+            $myObj->error = "Nenhum utilizador encontrado com o token inserido";
+            return $myObj;
+        }
+    }
+
     public function actionCriarEncomenda(){
         $token = substr(Yii::$app->request->headers["authorization"], 7);
         if(User::findIdentityByAccessToken($token)) {
