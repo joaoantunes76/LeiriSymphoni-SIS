@@ -59,7 +59,6 @@ class EncomendasController extends ActiveController
             $user = User::findIdentityByAccessToken($token);
             $perfil = Perfis::find()->where(['iduser' => $user->id])->one();
             $encomendas = Encomendas::find()->where(['idperfil' => $perfil->id])->all();
-
             $objArray = [];
             foreach ($encomendas as $encomenda){
                 $myObj = new \stdClass();
@@ -83,7 +82,6 @@ class EncomendasController extends ActiveController
                 $myObj->encomendasProdutos = $produtosArray;
                 array_push($objArray, $myObj);
             }
-
             return $objArray;
         }
         else{
