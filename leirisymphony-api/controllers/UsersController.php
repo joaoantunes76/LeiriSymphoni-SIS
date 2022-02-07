@@ -84,10 +84,10 @@ class UsersController extends ActiveController
             $myObj->email = $user->email;
             $myObj->nome = $perfil->nome;
             $myObj->nif = $perfil->nif;
-            $myObj->endereco = $perfil->nif;
-            $myObj->cidade = $perfil->nif;
-            $myObj->codigopostal = $perfil->nif;
-            $myObj->telefone = $perfil->nif;
+            $myObj->endereco = $perfil->endereco;
+            $myObj->cidade = $perfil->cidade;
+            $myObj->codigopostal = $perfil->codigopostal;
+            $myObj->telefone = $perfil->telefone;
 
             return $myObj;
         }
