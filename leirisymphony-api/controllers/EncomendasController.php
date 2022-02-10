@@ -101,7 +101,13 @@ class EncomendasController extends ActiveController
             $preco = 0;
             foreach ($carrinhos as $carrinho) {
                 $produto = Produtos::find()->where(["id" => $carrinho->idproduto])->one();
-                $preco += $produto->preco;
+                $preco += ($produto->preco * $carrinho->quantidade);
+                if($carrinho->quantidade > $carrinho->idproduto0->stock) {
+                    $myObj = new \stdClass();
+                    $myObj->status = "Encomenda não foi criada";
+                    $myObj->error = "Quantidade insuficiente";
+                    return $myObj;
+                }
             }
 
             $encomenda = new Encomendas();
@@ -119,6 +125,10 @@ class EncomendasController extends ActiveController
                     $encomendaProduto->quantidade = $carrinho->quantidade;
                     $encomendaProduto->idencomenda = $encomenda->id;
                     $encomendaProduto->save();
+                    $produto = $carrinho->idproduto0;
+                    $produto->stock -= $carrinho->quantidade;
+                    $produto->save();
+                    $carrinho->delete();
                 }
                 $myObj = new \stdClass();
                 $myObj->status = "Encomenda feita com sucesso";
